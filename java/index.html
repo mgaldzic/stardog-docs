@@ -76,7 +76,7 @@ them in that order.</p>
   <div><span><a id="intro"></a></span></div>
 
   <section id="admin"><header><h1 id='chapter'>Creating &amp; Administering Databases</h1></header>
-	  <p><code>StardogDBMS</code> provides simple programmatic access to all administrative functions available in Stardog.</p>
+	  <p><code>AdminConnection</code> provides simple programmatic access to all administrative functions available in Stardog.</p>
 
 	  <h2>Creating a Database</h2>
 	  <p>You can create a basic temporary memory database with Stardog with one line of code:</p>
@@ -85,8 +85,8 @@ them in that order.</p>
   	  </div>
 
 	  <p>
-		  You can also use the <a href="../java/snarl/com/complexible/stardog/StardogDBMS.html#memory()"><code>memory</code></a> and
-		  <a href="../java/snarl/com/complexible/stardog/StardogDBMS.html#disk()"><code>disk</code></a> functions to configure and create a database in any way you prefer.
+		  You can also use the <a href="../java/snarl/com/complexible/stardog/api/admin/AdminConnection.html#memory()"><code>memory</code></a> and
+		  <a href="../java/snarl/com/complexible/stardog/api/admin/AdminConnection.html#disk()"><code>disk</code></a> functions to configure and create a database in any way you prefer.
 		  These methods return <a href="../java/snarl/com/complexible/stardog/DatabaseBuilder.html"><code>DatabaseBuilder</code></a> 
 		  objects which you can use to configure the options of the database you'd like to create.  Finally, the
 		  <a href="../java/snarl/com/complexible/stardog/DatabaseBuilder.html#create()"><code>create</code></a> method
@@ -95,7 +95,7 @@ them in that order.</p>
 		  can be used to create new <a href="../java/snarl/com/complexible/stardog/api/Connection.html"><code>Connections</code></a> to your database.</p>
 
 	  <p>
-		  It is important to note that, as shown in the example, you <b>must</b> take care to always log out of the server when you are done working with StardogDBMS.
+		  It is important to note that, as shown in the example, you <b>must</b> take care to always log out of the server when you are done working with an <code>AdminConnection</code>.
 	  </p>
 
 	  <div style="font-size:small">
@@ -130,15 +130,14 @@ actually connects to the database using all specified properties on the configur
 <p>This class and its constructor methods are used for <em>all</em> of
 Stardog's Java APIs: SNARL (native Stardog API), Sesame, Jena, as well
 as HTTP and SNARL protocol. In the latter cases, you must also call <a
-href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html#url(java.lang.String)"><code>url()</code></a> and pass it a
+href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html#server(java.lang.String)"><code>url()</code></a> and pass it a
 valid URL to the Stardog server using the HTTP or SNARL protocols.</p>
 
-<p>Without the call to <code>url()</code>, your ConnectionConfiguration
+<p>Without the call to <code>server</code>, your ConnectionConfiguration
 will attempt to connect to a local, embedded version of the Stardog server.
 The Connection still operates in the standard client-server mode, the only
 difference is that the server is running in the <i>same</i> JVM as your
-application.  You can use the convenience methods on StardogDBMS to start and
-stop the embedded server.</p>
+application.</p>
 
 <p><b>Note</b>: Whether using SNARL, Sesame, or Jena, most (perhaps all)
 Stardog Java code will use <code>ConnectionConfiguration</code> to get a
@@ -156,13 +155,13 @@ API docs or the <a href="../admin/">administration section</a> for more informat
 
   <p>We extensively discuss the security sytem in Stardog in the <a href="../security">security</a> section.</p>
 
-  <p>When logged into a <a href="../java/snarl/com/complexible/stardog/StardogDBMS.html">StardogDBMS</a> you can access all security related features detailed in the
+  <p>When logged into the Stardog <a href="../java/snarl/com/complexible/stardog/api/admin/AdminConnection.html">DBMS</a> you can access all security related features detailed in the
   security section using any of the core security interfaces for <a href="../java/snarl/com/complexible/stardog/security/UserManager.html">managing users</a>,
 	  <a href="../java/snarl/com/complexible/stardog/security/RoleManager.html">roles</a> and <a href="../java/snarl/com/complexible/stardog/security/PermissionManager.html">permissions</a></p>
 
 	  <p><a href="http://shiro.apache.org">Shiro</a> is used internally as the core of the security framework,
 		  but unlike previous versions, you do not need to configure Shiro directly.  All management can be done via the command-line
-	  or via the security API provided by StardogDBMS</p>
+	  or via the security API provided by <code>AdminConnection</code></p>
 
   </section>
 
