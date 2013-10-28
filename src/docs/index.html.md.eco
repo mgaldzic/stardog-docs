@@ -22,14 +22,14 @@ analytics
 
 ### Downloading Stardog
 
-[Download](http://stardog.com/dl/) Stardog to get started. The [Stardog support forum](https://groups.google.com/a/clarkparsia.com/group/stardog/about),
+[Download](http://stardog.com/#download) Stardog to get started. The [Stardog support forum](https://groups.google.com/a/clarkparsia.com/group/stardog/about),
 [stardog@clarkparsia.com](mailto:stardog@clarkparsia.com), is the place
 to report bugs, ask questions, etc. You can also ask questions on [Stack
 Overflow](http://stackoverflow.com/) using the tag *stardog*. 
 
 ### Commercial Licensing & Support
 
-**For information about [Stardog commercial licensing](http://stardog.com/dotcom), please [email](mailto:sales@clarkparsia.com) for more details.**
+**For information about [Stardog commercial licensing](http://stardog.com/#plans), please [email](mailto:sales@clarkparsia.com) for more details.**
 
 ### Contributing
 
@@ -65,13 +65,10 @@ Administering Stardog Server, databases, including configuration and deployment 
 
 ## Programming Stardog
 
-Everything from reasoning, data validation, and SPARQL to programming Stardog with Java, JavaScript, and many other languages. Includes the documentation for Stardog Web.
+Everything from reasoning, data validation, and SPARQL to programming Stardog with Java, JavaScript, and many other languages, as well as the documentation for Stardog Web.
 
 ### [Programming with Java](/java/)
 <%- @partial("java.html")%>
-
-### [Building Stardog Web Apps](/web/)
-<%- @partial("web.html")%>
 
 ### [Integrity Constraint Validation](/icv)
 <%- @partial("icv.html")%>
@@ -91,6 +88,9 @@ Everything from reasoning, data validation, and SPARQL to programming Stardog wi
 ### [Programming with Javascript](http://clarkparsia.github.io/stardog.js/)
 
 The documentation for [stardog.js](http://clarkparsia.github.io/stardog.js), which is available on [Github](https://github.com/clarkparsia/stardog.js) and [npm]().
+
+### [SNARL Migration Guide](/migration)
+<%- @partial("migration.html") %>
 
 ## Understanding Stardog
 

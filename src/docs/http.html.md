@@ -5,7 +5,7 @@ layout: default
 related: ""
 shortTitle: HTTP
 toc: true
-summary: 'This chapter describes how to interact with Stardog over a network using SPARQL, HTTP, and SNARL protocols.'
+summary: 'This chapter describes how to interact with Stardog over a network using HTTP.'
 ---
 
 In the [Programming with Java](../java/) chapter, we consider
@@ -162,7 +162,7 @@ GET | POST /{db}/query
 The SPARQL endpoint for the database. The valid Accept types are listed
 above in the `HTTP Headers` section.
 
-To issue SPARQL queries with reasoning over HTTP, see the [Using Reasoning](http://www.stardog.com/docs/owl2/#reasoning) section of the [Reasoning](http://www.stardog.com/docs/owl2/) chapter.
+To issue SPARQL queries with reasoning over HTTP, see the [Using Reasoning](http://docs.stardog.com/owl2/#reasoning) section of the [Reasoning](http://docs.stardog.com/owl2/) chapter.
 
 ### Query Plan
 

@@ -335,12 +335,12 @@ The following twiddly knobs for Stardog Server are available in
 
 ### Starting & Stopping the Server
 
-**Note**: Unlike the other `stardog-admin` subcommands, starting and
-stopping the server may only be run locally, i.e., on the same machine
-as Stardog Server will run on.
+**Note**: Unlike the other `stardog-admin` subcommands, starting the 
+server may only be run locally, i.e., on the same machine
+the Stardog Server will run on.
 
-The simplest way to start the server—running on the default ports,
-detaching to run as a daemon, and writing `stardog.pid` and
+The simplest way to start the server—running on the default port,
+detaching to run as a daemon, and writing
 `stardog.log` to the current working directory— is
 
 ```bash
@@ -350,15 +350,12 @@ $ stardog-admin server start
 To specify parameters:
 
 ```bash
-$ stardog-admin server start --logfile=stardog.log --no-docs --http=8080
+$ stardog-admin server start --logfile mystardog.log --port=8080
 ```
 
-`--no-docs` will tell Stardog not to serve its documentation over HTTP
-at `http://SERVER/docs`, which it will otherwise do by default.
-
-Note: ports can be specified using the properties `--snarl` and
-`--http`. The HTTP interface can be disabled by using the flag
-`--no-http`; the SNARL interface may not be disabled.
+Note: the port can be specified using the property `--port`. 
+The HTTP interface can be disabled by using the flag
+`--no-http` and the SNARL interface via `--no-snarl`.
 
 To shut down the server:
 
@@ -368,22 +365,36 @@ $ stardog-admin server stop
 
 If you started stardog on a port other than the default, or want to shut
 down a remote server, you can simply use the `--server` option to
-specify the location of the server you wish to shut down
+specify the location of the server you wish to shut down.
+
+By default Stardog will bind it's server to `0.0.0.0`.  You can specify a different
+network interface for Stardog to bind to using the `--bind` property of `server start`.
 
 <div id="sd-JMX"></div>
-### Monitoring the Server with JMX <t>new2</t>
+### Server Monitoring with Watchdog & JMX <t>new2</t>
 
-Blah blah blah watchdog blah blah blah.
+Stardog includes integration with JMX called Watchdog.  In addition to providing
+some basic JVM information, Watchdog also exports information about the Stardog
+DBMS configuration as well as stats for all of the databases within the system, 
+such as the total number of open connections, size, and average query time.
 
-### Serving Stardog Documentation
+#### Accessing Watchdog
 
-By default, if you start Stardog Server with HTTP enabled, then Stardog
-will serve the system documentation at `http://${server}/docs` (which is
-why "docs" is a reserved database name).
+To access Watchdog, you can simply use a tool like VisualVM or JConsole 
+to attach to the process running the JVM, or connect directly to the JMX server.
 
-In a production deployment, you might want to disable documentation
-serving, which you can do by passing `--no-docs` on server startup or by
-disabling HTTP altogether.
+You can also access information from Watchdog in the web console for the database,
+or by performing a `GET` on `/{db}/watchdog` which will return a simple JSON object
+containing the information available via JMX.
+
+#### Configuring Watchdog
+
+By default, Watchdog will bind an RMI server for remote access on port 5833.  If you
+want to change which port Watchdog binds the remote server to, you can set the property
+`watchdog.port` via `stardog.properties` find in your `$STARDOG_HOME`.  If you wish
+to disable remote access to JMX altogether you can set `watchdog.remote.access` to `false` 
+in `stardog.properties`.  Finally, if you wish to disable Watchdog completely, just
+set `watchdog.enabled` to `false` in `stardog.properties`.
 
 ### Locking Stardog Home
 
@@ -468,140 +479,32 @@ remains online.
 
 The following table summarizes the options:
 
-<table>
-      <thead>
-        <tr>
-        <th>Config Option</th>
-        <th>Mutability</th>
-        <th>Default</th>
-        <th>API</th>
-      </tr>
-    </thead>
-    <tfoot>
-       <tr>
-        <th>Config Option</th>
-        <th>Mutability</th>
-        <th>Default</th>
-        <th>API</th>
-      </tr>
-    </tfoot>
-    <tbody>
-      <tr>
-        <td>database.name</td>
-        <td>false</td>
-        <td></td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#NAME">DatabaseOptions.NAME</a></td>
-      </tr>
-      <tr>
-        <td>database.online</td>
-        <td>false</td>
-        <td>true</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#ONLINE">DatabaseOptions.ONLINE</a></td>
-      </tr>
-      <tr>
-        <td>icv.active.graphs</td>
-        <td>false</td>
-        <td>default</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#ICV_ACTIVE_GRAPHS">DatabaseOptions.ICV_ACTIVE_GRAPHS</a></td>
-      </tr>
-      <tr>
-        <td>icv.enabled</td>
-        <td>true</td>
-        <td>false</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#ICV_ENABLED">DatabaseOptions.ICV_ENABLED</a></td>
-      </tr>
-      <tr>
-        <td>icv.reasoning.type</td>
-        <td>true</td>
-        <td>NONE</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#ICV_REASONING_TYPE">DatabaseOptions.ICV_REASONING_TYPE</a></td>
-      </tr>
-      <tr>
-        <td>index.differential.enable.limit</td>
-        <td>true</td>
-        <td>1000000</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#DIFF_INDEX_MIN_LIMIT">IndexOptions.DIFF_INDEX_MIN_LIMIT</a></td>
-      </tr>
-      <tr>
-        <td>index.differential.merge.limit</td>
-        <td>true</td>
-        <td>10000</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#DIFF_INDEX_MAX_LIMIT">IndexOptions.DIFF_INDEX_MAX_LIMIT</a></td>
-      </tr>
-      <tr>
-        <td>index.literals.canonical</td>
-        <td>false</td>
-        <td>true</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#CANONICAL_LITERALS">IndexOptions.CANONICAL_LITERALS</a></td>
-      </tr>
-      <tr>
-        <td>index.named.graphs</td>
-        <td>false</td>
-        <td>true</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#INDEX_NAMED_GRAPHS">IndexOptions.INDEX_NAMED_GRAPHS</a></td>
-      </tr>
-      <tr>
-        <td>index.persist</td>
-        <td>true</td>
-        <td>false</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#PERSIST">IndexOptions.PERSIST</a></td>
-      </tr>
-      <tr>
-        <td>index.persist.sync</td>
-        <td>true</td>
-        <td>true</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#SYNC">IndexOptions.SYNC</a></td>
-      </tr>
-      <tr>
-        <td>index.statistics.update.automatic</td>
-        <td>true</td>
-        <td>true</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#AUTO_STATS_UPDATE">IndexOptions.AUTO_STATS_UPDATE</a></td>
-      </tr>
-      <tr>
-        <td>index.type</td>
-        <td>false</td>
-        <td>Disk</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/index/IndexOptions.html#INDEX_TYPE">IndexOptions.INDEX_TYPE</a></td>
-      </tr>
-      <tr>
-        <td>reasoning.consistency.automatic</td>
-        <td>true</td>
-        <td>false</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#CONSISTENCY_AUTOMATIC">DatabaseOptions.CONSISTENCY_AUTOMATIC</a></td>
-      </tr>
-      <tr>
-        <td>reasoning.punning.enabled</td>
-        <td>false</td>
-        <td>false</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#PUNNING_ENABLED">DatabaseOptions.PUNNING_ENABLED</a></td>
-      </tr>
-      <tr>
-        <td>reasoning.schema.graphs</td>
-        <td>true</td>
-        <td>default</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#SCHEMA_GRAPHS">DatabaseOptions.SCHEMA_GRAPHS</a></td>
-      </tr>
-      <tr>
-        <td>search.enabled</td>
-        <td>false</td>
-        <td>false</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#SEARCHABLE">DatabaseOptions.SEARCHABLE</a></td>
-      </tr>
-      <tr>
-        <td>search.reindex.mode</td>
-        <td>false</td>
-        <td>wait</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#SEARCH_REINDEX_MODE">DatabaseOptions.SEARCH_REINDEX_MODE</a></td>
-      </tr>
-      <tr>
-        <td>transactions.durable</td>
-        <td>true</td>
-        <td>false</td>
-        <td><a href="../java/snarl/com/clarkparsia/stardog/DatabaseOptions.html#TRANSACTIONS_DURABLE">DatabaseOptions.TRANSACTIONS_DURABLE</a></td>
-      </tr>
-    </tbody>
-</table>
+Config Option                       | Mutability | Default    | API                 
+:---------------------------------  | :--------  | :--------  | :------------------ 
+database.archetypes                 | Yes        |            | [DatabaseOptions.ARCHETYPES](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#ARCHETYPES)
+database.name                       | No         |            | [DatabaseOptions.NAME](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#NAME)
+database.namespaces                 | Yes        | rdf, rdfs, xsd, owl, stardog | [DatabaseOptions.NAMESPACES](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#NAMESPACES)
+database.online                     | No         | true       | [DatabaseOptions.ONLINE](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#ONLINE)
+icv.active.graphs                   | No         | default    | [DatabaseOptions.ICV_ACTIVE_GRAPHS](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#ICV_ACTIVE_GRAPHS)
+icv.consistency.automatic           | No         | false      | [DatabaseOptions.ICV_CONSISTENCY_AUTOMATIC](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#ICV_CONSISTENCY_AUTOMATIC)
+icv.enabled                         | Yes        | false      | [DatabaseOptions.ICV_ENABLED](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#ICV_ENABLED)
+icv.reasoning.type                  | Yes        | NONE       | [DatabaseOptions.ICV_REASONING_TYPE](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#ICV_REASONING_TYPE)
+index.connection.timeout            | Yes        | 3600000    | [IndexOptions.INDEX_CONNECTION_TIMEOUT_MS](/java/snarl/com/complexible/stardog/index/IndexOptions.html#INDEX_CONNECTION_TIMEOUT_MS)
+index.differential.enable.limit     | Yes        | 1000000    | [IndexOptions.DIFF_INDEX_MIN_LIMIT](/java/snarl/com/complexible/stardog/index/IndexOptions.html#DIFF_INDEX_MIN_LIMIT)
+index.differential.merge.limit      | Yes        | 10000      | [IndexOptions.DIFF_INDEX_MAX_LIMIT](/java/snarl/com/complexible/stardog/index/IndexOptions.html#DIFF_INDEX_MAX_LIMIT)
+index.literals.canonical            | No         | true       | [IndexOptions.CANONICAL_LITERALS](/java/snarl/com/complexible/stardog/index/IndexOptions.html#CANONICAL_LITERALS)
+index.named.graphs                  | No         | true       | [IndexOptions.INDEX_NAMED_GRAPHS](/java/snarl/com/complexible/stardog/index/IndexOptions.html#INDEX_NAMED_GRAPHS)
+index.persist                       | Yes        | false      | [IndexOptions.PERSIST](/java/snarl/com/complexible/stardog/index/IndexOptions.html#PERSIST)
+index.persist.sync                  | Yes        | true       | [IndexOptions.SYNC](/java/snarl/com/complexible/stardog/index/IndexOptions.html#SYNC)
+index.statistics.update.automatic   | Yes        | true       | [IndexOptions.AUTO_STATS_UPDATE](/java/snarl/com/complexible/stardog/index/IndexOptions.html#AUTO_STATS_UPDATE)
+index.type                          | No         | Disk       | [IndexOptions.INDEX_TYPE](/java/snarl/com/complexible/stardog/index/IndexOptions.html#INDEX_TYPE)
+query.timeout                       | Yes        |            | [DatabaseOptions.QUERY_TIMEOUT](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#QUERY_TIMEOUT)
+reasoning.consistency.automatic     | Yes        | false      | [DatabaseOptions.CONSISTENCY_AUTOMATIC](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#CONSISTENCY_AUTOMATIC)
+reasoning.punning.enabled           | No         | false      | [DatabaseOptions.PUNNING_ENABLED](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#PUNNING_ENABLED)
+reasoning.schema.graphs             | Yes        | default    | [DatabaseOptions.SCHEMA_GRAPHS](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#SCHEMA_GRAPHS)
+search.enabled                      | Yes        | false      | [DatabaseOptions.SEARCHABLE](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#SEARCHABLE)
+transactions.durable                | Yes        | false      | [DatabaseOptions.TRANSACTIONS_DURABLE](/java/snarl/com/complexible/stardog/db/DatabaseOptions.html#TRANSACTIONS_DURABLE)
+
 
 
 #### Legal Values of Configuration Options
@@ -691,21 +594,23 @@ examples.
 
 Stardog database archetypes are a new feature in 2.0. A database archetype is a named, vendor-defined or user-defined bundle of data and functionality to be applied at database-creation time. Archetypes are primarily for supporting various data standards or toolchain configurations in a simple way.
 
-For example, the [SKOS]() standard from W3C defines an OWL vocabulary for building taxonomies, thesauruses, etc. SKOS is made up by a vocabulary, some constraints, some kinds of reasoning, and (typically) some SPARQL queries. If you are developing an app that uses SKOS and Stardog, without the archetype feature, you are responsible for assembling all that SKOS stuff yourself. Which is tedious, error-prone, and not very rewarding even when it's done right.
+For example, the SKOS standard from W3C defines an OWL vocabulary for building taxonomies, thesauruses, etc. SKOS is made up by a vocabulary, some constraints, some kinds of reasoning, and (typically) some SPARQL queries. If you are developing an app that uses SKOS and Stardog, without the archetype feature, you are responsible for assembling all that SKOS stuff yourself. Which is tedious, error-prone, and not very rewarding even when it's done right.
 
 Rather than putting that burden on Stardog users, we've created database archetypes as a mechanism to collect these "bundles of stuff" which, as a developer, you can then simply attach to a particular database.
 
 The last point to make is that archetypes are composable: you can mix-and-match them at database creation time as needed.
 
-In the 2.0 release, we're supporting three database archetypes: [PROV](), [SKOS](), and [Stardog Web]().
-
-#### Stardog Web Archetype
+In the 2.0 release, we're supporting three database archetypes: [PROV](http://www.w3.org/TR/prov-overview/) and [SKOS](http://www.w3.org/2004/02/skos/).
 
 #### SKOS Archetype
 
-The SKOS archetype is for databases that will contain SKOS data, ...
+The SKOS archetype is for databases that will contain SKOS data, and includes the SKOS schema, SKOS constraints using Stardog's Integrity Constraint Validation, and some namespace-prefix bindings.
 
 #### PROV Archetype
+
+The PROV archetype is for databases that will contain PROV data, and includes the SKOS schema, SKOS constraints using Stardog's Integrity Constraint Validation, and some namespace-prefix bindings.
+
+<t>shout</t> Archetypes are composable, so you can use more of them and they are intended to be used alongside *your domain data*, which may include as many other schemas, ontologies, etc. as are required.
 
 ### Database Creation Templates
 
@@ -1151,14 +1056,37 @@ This is specified when creating a database by setting the property
 `search.reindex.mode` to "sync", "async", or to a valid cron expression.
 The default is "sync".
 
-### Recovering From Transaction Failures
+### Transactions
 
-In Stardog 1.2 we introduced a new transaction subsystem written from
-scratch for use in Stardog. This transaction framework—which we call
-"erg"—is mostly maintenance free; but there are some rare conditions in
+Stardog has had native ACID transactions from its initial release. In 1.2 we introduced a new transaction subsystem written from
+scratch. 
+
+### Concurrency Control & Isolation Levels
+
+A Stardog connection will run in `READ COMMITTED` isolation level if it has not started an explicit transaction and will run in `READ COMMITTED SNAPSHOT` isolation level if it has started a transaction. In either mode, uncommitted changes will only be visible to the connection that made the changes: no other connection can see those values before they are committed. Thus, 'dirty reads' can never occur. Neither mode locks the database; if there are conflicting changes, the latest commit wins.
+
+The difference between `READ COMMITTED` and `READ COMMITTED SNAPSHOT` isolation levels is that in the former case a connection will see updates committed by another connection immediately, whereas in the latter case a connection will see a transactionally consistent snapshot of the data as it existed at the start of the transaction and will not see any updates. 
+
+We illustrate the difference between these two levels with the following example where initially the database contains a single triple `:x :value 1`.
+
+Time | Connection 1 | Connection 2 | Connection 3
+-----|--------------|--------------|-------------
+0    | SELECT ?val {?x :val ?val}<br>#reads 1 | SELECT ?val {?x :val ?val}<br>#reads 1 | SELECT ?val {?x :val ?val}<br>#reads 1
+1    | BEGIN TX     |              |
+2    | INSERT {:x :value 2}<br>DELETE {:x :value ?old} | |
+3    | SELECT ?val {?x :val ?val}<br>#reads 2 | SELECT ?val {?x :val ?val}<br>#reads 1 | SELECT ?val {?x :val ?val}<br>#reads 1
+4    |              |              |BEGIN TX 
+6    | COMMIT       |              |
+7    | SELECT ?val {?x :val ?val}<br>#reads 2 | SELECT ?val {?x :val ?val}<br>#reads 2 | SELECT ?val {?x :val ?val}<br>#reads 1
+8    |              |              | INSERT { :x :value 3 }<br>DELETE {:x :value ?old}
+9    |              |              | COMMIT
+10   | SELECT ?val {?x :val ?val}<br>#reads 3 | SELECT ?val {?x :val ?val}<br>#reads 3 | SELECT ?val {?x :val ?val}<br>#reads 3
+
+### Commit Failure Autorecovery
+
+Stardog's transaction framework, which we call
+`erg`, is mostly maintenance free; but there are some rare conditions in
 which manual intervention may be needed.
-
-#### Commit Failure Autorecovery
 
 Stardog's strategy for recovering automatically from (the very unlikely
 event of) commit failure is as follows:
@@ -1166,14 +1094,14 @@ event of) commit failure is as follows:
 -   Stardog will automatically roll back the transaction upon a commit
     failure;
 -   Stardog automatically takes the affected database offline for
-    maintenance;The probability of recovering from a catastrophic
+    maintenance;<fn>The probability of recovering from a catastrophic
     transaction failure is inversely proportional to the number of
     subsequent write attempts; hence, Stardog offlines the database to
-    prevent subsequent write attempts and, hence, to increase the
-    likelihood of recovery. then
+    prevent subsequent write attempts and to increase the
+    likelihood of recovery.</fn> then
 -   Stardog will then begin recovery automatically, bringing the
     recovered database back online once that task is successful so that
-    it can resume operations.
+    operations may resume.
 
 With an appropriate logging configuration for production usage (at least
 error-level logging), log messages for the preceding recovery operations
@@ -1329,9 +1257,7 @@ up the disk space needed by each database.
 Stardog provides Windows batch (`.bat`) files for use on Windows; they
 provide roughly the same set of functionality provided by the Bash
 scripts which are used on \*nix systems. There are however, a few small
-differences between the two. You cannot change the logfile with the
-global `--logfile` option using the .bat scripts, it will always just
-log to the console. Additionally, when you start a server with
+differences between the two. When you start a server with
 `server start`, this does not detach to the background, it will run in
 the current console.
 

@@ -3,7 +3,7 @@ quote: "Every program is a part of some other program and rarely fits."
 title: "What's New and When?"
 layout: default
 related: ""
-toc: false
+toc: true
 ---
 
 This page briefly lists major features and other notable changes to Stardog from 1.0 to 2.0; it will be updated for each new release. For a complete list of changes, including notable bug fixes, see the [Release Notes](/docs/RELEASE_NOTES.txt).
@@ -14,11 +14,13 @@ This page briefly lists major features and other notable changes to Stardog from
 - [Web Console](/console): a Stardog Web app for managing Stardog Databases; includes Linked Data Server, etc.
 - [JMX monitoring](/admin/#sd-JMX); includes graphical monitoring via Web Console
 - [HTTP & SNARL servers unified](/admin/#sd-HTTP-SNARL-Unification) into a single server (default port 5820)
-- [Stardog Web](/web): our semantic app framework
 - [Database archetypes](/admin/#sd-Archetypes) for PROV, SKOS; extensible for user-defined ontologies, schemas, etc.
 - [Stardog Rules Syntax](/owl2/#sd-Stardog-Rules-Syntax): new syntax for user-defined rules
 - [Performance improvements](/performance) for SPARQL query evaluation
 - [Hierarchical explanations](/owl2/#sd-Proof-Trees) of inferences using proof trees
+- [SL reasoning profile](/owl2/#sd-Profiles)
+- Client and server dependencies cleanly separated
+- Evaluation of non-recursive datalog queries to improve reasoning performance
 
 ## 1.2
 
