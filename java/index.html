@@ -76,7 +76,7 @@ them in that order.</p>
   <div><span><a id="intro"></a></span></div>
 
   <section id="admin"><header><h1 id='chapter'>Creating &amp; Administering Databases</h1></header>
-	  <p><code>StardogDBMS</code> provides simple programmatic access to all administrative functions available in Stardog.</p>
+	  <p><code>AdminConnection</code> provides simple programmatic access to all administrative functions available in Stardog.</p>
 
 	  <h2>Creating a Database</h2>
 	  <p>You can create a basic temporary memory database with Stardog with one line of code:</p>
@@ -85,17 +85,17 @@ them in that order.</p>
   	  </div>
 
 	  <p>
-		  You can also use the <a href="../java/snarl/com/clarkparsia/stardog/StardogDBMS.html#memory()"><code>memory</code></a> and
-		  <a href="../java/snarl/com/clarkparsia/stardog/StardogDBMS.html#disk()"><code>disk</code></a> functions to configure and create a database in any way you prefer.
-		  These methods return <a href="../java/snarl/com/clarkparsia/stardog/DatabaseBuilder.html"><code>DatabaseBuilder</code></a> 
+		  You can also use the <a href="../java/snarl/com/complexible/stardog/api/admin/AdminConnection.html#memory()"><code>memory</code></a> and
+		  <a href="../java/snarl/com/complexible/stardog/api/admin/AdminConnection.html#disk()"><code>disk</code></a> functions to configure and create a database in any way you prefer.
+		  These methods return <a href="../java/snarl/com/complexible/stardog/DatabaseBuilder.html"><code>DatabaseBuilder</code></a> 
 		  objects which you can use to configure the options of the database you'd like to create.  Finally, the
-		  <a href="../java/snarl/com/clarkparsia/stardog/DatabaseBuilder.html#create()"><code>create</code></a> method
+		  <a href="../java/snarl/com/complexible/stardog/DatabaseBuilder.html#create()"><code>create</code></a> method
 		  takes the list of files to bulk load into the database when you create it.  This returns a valid
-		  <a href="../java/snarl/com/clarkparsia/stardog/api/ConnectionConfiguration.html"><code>ConnectionConfiguration</code></a> which
-		  can be used to create new <a href="../java/snarl/com/clarkparsia/stardog/api/Connection.html"><code>Connections</code></a> to your database.</p>
+		  <a href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html"><code>ConnectionConfiguration</code></a> which
+		  can be used to create new <a href="../java/snarl/com/complexible/stardog/api/Connection.html"><code>Connections</code></a> to your database.</p>
 
 	  <p>
-		  It is important to note that, as shown in the example, you <b>must</b> take care to always log out of the server when you are done working with StardogDBMS.
+		  It is important to note that, as shown in the example, you <b>must</b> take care to always log out of the server when you are done working with an <code>AdminConnection</code>.
 	  </p>
 
 	  <div style="font-size:small">
@@ -115,30 +115,29 @@ them in that order.</p>
   <section id="connection"><header><h1 id='chapter'>Creating a Connection String</h1></header>
 
   <p>As you can see from all of the examples,
-  the <a href="../java/snarl/com/clarkparsia/stardog/api/ConnectionConfiguration.html"><code>ConnectionConfiguration</code></a> (in <a
-href="../java/snarl/com/clarkparsia/stardog/api/package-summary.html"><code>com.clarkparsia.stardog.api</code></a> package) class is
+  the <a href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html"><code>ConnectionConfiguration</code></a> (in <a
+href="../java/snarl/com/complexible/stardog/api/package-summary.html"><code>com.clarkparsia.stardog.api</code></a> package) class is
 where the initial action takes place:</p>
 
   <div style="font-size: small">
     <script src="https://gist.github.com/1045578.js?file=L4044.java"></script>
   </div>
 
-<p>The <a href="../java/snarl/com/clarkparsia/stardog/api/ConnectionConfiguration.html#to()"><code>to()</code></a> method takes a Database Name (as a string);
-	and then <a href="../java/snarl/com/clarkparsia/stardog/api/ConnectionConfiguration.html#connect()"><code>connect()</code></a>
+<p>The <a href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html#to()"><code>to()</code></a> method takes a Database Name (as a string);
+	and then <a href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html#connect()"><code>connect()</code></a>
 actually connects to the database using all specified properties on the configuration.</p>
 
 <p>This class and its constructor methods are used for <em>all</em> of
 Stardog's Java APIs: SNARL (native Stardog API), Sesame, Jena, as well
 as HTTP and SNARL protocol. In the latter cases, you must also call <a
-href="../java/snarl/com/clarkparsia/stardog/api/ConnectionConfiguration.html#url(java.lang.String)"><code>url()</code></a> and pass it a
+href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html#server(java.lang.String)"><code>url()</code></a> and pass it a
 valid URL to the Stardog server using the HTTP or SNARL protocols.</p>
 
-<p>Without the call to <code>url()</code>, your ConnectionConfiguration
+<p>Without the call to <code>server</code>, your ConnectionConfiguration
 will attempt to connect to a local, embedded version of the Stardog server.
 The Connection still operates in the standard client-server mode, the only
 difference is that the server is running in the <i>same</i> JVM as your
-application.  You can use the convenience methods on StardogDBMS to start and
-stop the embedded server.</p>
+application.</p>
 
 <p><b>Note</b>: Whether using SNARL, Sesame, or Jena, most (perhaps all)
 Stardog Java code will use <code>ConnectionConfiguration</code> to get a
@@ -147,7 +146,7 @@ after getting that handle, can use the API that makes the most sense for the
 use cases and requirements at hand.</p>
 
 <p>See the <a
-href="../java/snarl/com/clarkparsia/stardog/api/ConnectionConfiguration.html"><code>ConnectionConfiguration</code></a>
+href="../java/snarl/com/complexible/stardog/api/ConnectionConfiguration.html"><code>ConnectionConfiguration</code></a>
 API docs or the <a href="../admin/">administration section</a> for more information on connection strings.</p>
 
   </section>
@@ -156,13 +155,13 @@ API docs or the <a href="../admin/">administration section</a> for more informat
 
   <p>We extensively discuss the security sytem in Stardog in the <a href="../security">security</a> section.</p>
 
-  <p>When logged into a <a href="../java/snarl/com/clarkparsia/stardog/StardogDBMS.html">StardogDBMS</a> you can access all security related features detailed in the
-  security section using any of the core security interfaces for <a href="../java/snarl/com/clarkparsia/stardog/security/UserManager.html">managing users</a>,
-	  <a href="../java/snarl/com/clarkparsia/stardog/security/RoleManager.html">roles</a> and <a href="../java/snarl/com/clarkparsia/stardog/security/PermissionManager.html">permissions</a></p>
+  <p>When logged into the Stardog <a href="../java/snarl/com/complexible/stardog/api/admin/AdminConnection.html">DBMS</a> you can access all security related features detailed in the
+  security section using any of the core security interfaces for <a href="../java/snarl/com/complexible/stardog/security/UserManager.html">managing users</a>,
+	  <a href="../java/snarl/com/complexible/stardog/security/RoleManager.html">roles</a> and <a href="../java/snarl/com/complexible/stardog/security/PermissionManager.html">permissions</a></p>
 
 	  <p><a href="http://shiro.apache.org">Shiro</a> is used internally as the core of the security framework,
 		  but unlike previous versions, you do not need to configure Shiro directly.  All management can be done via the command-line
-	  or via the security API provided by StardogDBMS</p>
+	  or via the security API provided by <code>AdminConnection</code></p>
 
   </section>
 
@@ -194,8 +193,8 @@ API docs or the <a href="../admin/">administration section</a> for more informat
 		  the state of the database within the transaction.</p>
 
 	  <p>By default, RDF added will go into the default context unless specified otherwise.  As shown, you can use
-		  <a href="../java/snarl/com/clarkparsia/stardog/api/Adder.html">Adder</a> directly to add statements and graphs to the database,
-		  and if you want to add data from a file or input stream, you use an <a href="../java/snarl/com/clarkparsia/stardog/api/IO.html"><code>io()</code></a>,
+		  <a href="../java/snarl/com/complexible/stardog/api/Adder.html">Adder</a> directly to add statements and graphs to the database,
+		  and if you want to add data from a file or input stream, you use an <a href="../java/snarl/com/complexible/stardog/api/IO.html"><code>io()</code></a>,
 		  <code>format()</code>, and <code>stream()</code> chain of method invocations.</p>
 
 	  <p>See the <a href="../java/snarl">SNARL API</a> Javadocs for all the
@@ -260,7 +259,7 @@ of "?s" in any BGP in the query, and you can specify <code>null</code> to remove
     <script src="https://gist.github.com/1045573.js?file=SNARLRemoveData.java"></script>
   </div>
 
-  <p>Let's look at <a href="../java/snarl/com/clarkparsia/stardog/api/Remover.html">removing</a> data via SNARL;
+  <p>Let's look at <a href="../java/snarl/com/complexible/stardog/api/Remover.html">removing</a> data via SNARL;
 	  in the example above, you can
 	  see that file or stream-based removal is symmetric to file or stream-based
 	  addition, i.e., calling <code>remove()</code> in an <code>io()</code> chain
@@ -317,10 +316,10 @@ This provides a powerful mechanism for querying both your RDF index and full-tex
   <h2>SNARL Connection Views</h2>
 
 	  <p>
-		  As of 0.7, SNARL <a href="../java/snarl/com/clarkparsia/stardog/api/Connection.html#"><code>Connections</code></a>
+		  As of 0.7, SNARL <a href="../java/snarl/com/complexible/stardog/api/Connection.html#"><code>Connections</code></a>
 		  support obtaining a specified type of Connection.  This provides the ability to extend
 		  and enhance the features available to a Connection while maintaining the standard,
-		  simple Connection API.  The Connection <a href="../java/snarl/com/clarkparsia/stardog/api/Connection.html#as()"><code>as</code></a> method takes
+		  simple Connection API.  The Connection <a href="../java/snarl/com/complexible/stardog/api/Connection.html#as()"><code>as</code></a> method takes
 		  as a parameter the interface, which must be a sub-type of a Connection, that you
 		  would like to use.  <code>as</code> will either return the Connection as the view
 		  you've specified, or it will throw an exception if the view could not be obtained
@@ -333,7 +332,7 @@ This provides a powerful mechanism for querying both your RDF index and full-tex
 
 	  <p>
 		  An example of obtaining an instance of a
-		  <a href="../java/snarl/com/clarkparsia/stardog/api/search/SearchConnection.html"><code>SearchConnection</code></a>
+		  <a href="../java/snarl/com/complexible/stardog/api/search/SearchConnection.html"><code>SearchConnection</code></a>
 		  to use Stardog's full-text search support.
 	  </p>
 
