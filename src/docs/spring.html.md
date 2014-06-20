@@ -4,16 +4,28 @@ title: Programming with Spring
 shortTitle: Spring
 layout: default
 toc: true
-summary: Spring is a platform to build and run enterprise applications in Java. Stardog's Spring support makes life easier for enterprise developers who need to work with Semantic Web technology&mdash;including RDF, SPARQL, and OWL&mdash;by way of Stardog.
 ---
 
-The Spring for Stardog [source code](http://github.com/clarkparsia/stardog-spring) is available on Github. 
+The Spring for Stardog [source code](http://github.com/clarkparsia/stardog-spring) is available on Github.
 
-## Overview 
+Binary releases are available on the [Github release page](https://github.com/clarkparsia/stardog-spring/releases).
+
+As of 2.1.3, Stardog-Spring and Stardog-Spring-Batch can both be retrieved from Maven central:
+
+*   `com.complexible.stardog:stardog-spring:2.1.3`
+*   `com.complexible.stardog:stardog-spring-batch:2.1.3`
+
+
+
+## Overview
 
 Spring for Stardog makes it possible to rapidly build Stardog-backed applications with the Spring Framework. As with many other parts of Spring, Stardog's Spring
 integration uses the template design pattern for abstracting standard
 boilerplate away from application developers.
+
+Stardog Spring can be included via Maven with "com.complexible.stardog:stardog-spring:version" and "com.complexible.stardog:stardog-spring-batch" for Spring Batch support.  Both of these dependencies require the local "mavenInstall" script be run,
+and the Stardog Spring packages installed in Maven.  Embedded server is still supported, but via providing an implementatino of the Provider interface.
+This enables users of the embedded server to have full control over how to use the embedded server.
 
 At the lowest level, Spring for Stardog includes
 
@@ -51,13 +63,15 @@ To build Spring for Stardog, you need a release of Stardog; we use
         mvn install:install-file
               -DgroupId=com.clarkparsia.stardog
               -DartifactId=stardog-spring
-              -Dversion=1.1.1
+              -Dversion=2.1.2
               -Dfile=stardog-spring.jar
               -Dpackaging=jar
               -DpomFile=pom.xml
 
+Note: The stardogLocation and "fileTree" dependency is included in development of Stardog Spring, as a local embedded server is used for automated testing.  Before running the build, you should edit the "CHANGE" areas in teh build file to point to your local Stardog instance.  See the README on the respective Github projects for more details.
 
-## Basic Spring 
+
+## Basic Spring
 
 There are three Beans to add to a Spring application context:
 
@@ -87,6 +101,8 @@ automatically mapping result set bindings into common data types. The
 parameter for a single result set.
 
 For example,
+
+<gist>4570152?file=SingleMapper.java</gist>
 
 The key methods on `SnarlTemplate` include the following:
 
@@ -132,7 +148,13 @@ configured in Spring.
 
 Here's a sample `applicationContext`:
 
-## Spring Batch 
+<gist>1115889?file=applicationContext.xml</gist>
+
+Another example with reasoning and credentials set in the factory bean:
+
+<gist>8747480?file=stardog-spring.xml</gist>
+
+## Spring Batch
 
 In addition to the base `DataSource` and `SnarlTemplate`, Spring Batch
 support adds the following:
@@ -147,14 +169,38 @@ support adds the following:
 These beans can then be used within Spring Batch job definition, for
 example:
 
-## Examples 
+<gist>4570209?file=batchContext.xml</gist>
+
+
+## Examples
 
 ### query() with SELECT queries
 
+<gist>1115894?file=spring-select.java</gist>
+
 ### doWithGetter
+
+<gist>1115915?file=dowithgetter.java</gist>
 
 ### doWithAdder
 
+<gist>1115915?file=doWithAdder.java</gist>
+
 ### doWithRemover
 
+<gist>1115915?file=doWithRemover.java</gist>
+
 ### construct()
+
+<gist>1115915?file=construct.java</gist>
+
+### update()
+
+<gist>7846171?file=StardogSpringUpdate.java</gist>
+
+### ask()
+
+<gist>7846198?file=StardogSpringAsk.java</gist>
+
+
+

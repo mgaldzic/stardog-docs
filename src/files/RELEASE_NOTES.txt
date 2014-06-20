@@ -1,3 +1,238 @@
+2.1.3 Changes
+----------------------------------------------------------------------------
+
+* ADDED: Support for configuration of password requirements
+
+* FIXED: Override of default URL server does not work
+
+* FIXED: Incorrect error message when failing to connect over HTTP to server w/ HTTP disabled
+
+* FIXED: When custom bind address is used, server start output does not correctly reflect address server is listening on
+
+* FIXED: BNodes declared in head of insert/delete queries are static
+
+* FIXED: Need more graceful handling of query bindings header when it's the empty string
+
+* FIXED: Doubled-typed literal values which are .equals, could canonicalize to different identifiers
+
+* FIXED: Incomplete reasoning with property chains
+
+* FIXED: Non-deterministic connection failures over SNARL protocol in a server under high load
+
+* FIXED: SPARQL count optimization can rewrite count expressions to things which are not semantically equivalent
+
+* FIXED: Commits which contain the removal of an empty named graph yield an NPE during commit to search index
+
+* FIXED: Update queries via Sesame bindings throw exceptions
+
+* FIXED: Setting query properties on a Sesame query, such as includedInferred, does not work as expected
+
+* FIXED: Repository.getContextIDs returns a non-unique list of contexts
+
+* FIXED: Getting the size of a specific named graph via StardogRepositoryConnection yields an UnsupportedOperationException
+
+* FIXED: Shells scripts do not quote paths which fails in the presence of paths with spaces and the like
+
+* FIXED: Memory mapped tx log files on Windows can get mangled when mem-mapped contents are flushed to disk
+
+* FIXED: Computation of very large query result sets slows down due to cache thrashing
+
+* MODIFIED: Starting server with --no-web-console should print a message
+
+* MODIFIED: CLI export help needs some clarification
+
+2.1.2 Changes
+----------------------------------------------------------------------------
+
+* ADDED: Auto-complete feature in Web console's query panel
+
+* ADDED: Load query from file in Web console's query panel
+
+* ADDED: SNARL API support for performing an export
+
+* ADDED: Server side export support
+
+* ADDED: Arithmetic operations for date/time values
+
+* FIXED: Incorrectly handling filter inlining when variable in OPTIONAL side of join
+
+* FIXED: Most recent version of chrome breaks the webconsole layout
+
+* FIXED: CORS method `OPTION` is missing
+
+* FIXED: DISTINCT operator could return only a REDUCED result set in some cases with reasoning
+
+* FIXED: Correctly verify property paths during optimization when both start & end point are unbound
+
+* FIXED: Rewritten plans might incorrectly share variables which can lead to empty results
+
+* FIXED: In the Web console, prefixes included in the query panel seem to be irrelevant
+
+* FIXED: Corrected rendering of accented characters in welcome screen
+
+* FIXED: Export cli function does not use RDF format aliases
+
+* FIXED: Unexpected result for HAVING (bound(...)) expression
+
+* FIXED: Incorrect handling of function expressions within a bind
+
+* FIXED: Do not create superfluous temp files which are not used or deleted
+
+* FIXED: Be less aggressive about moving intermediate results off heap
+
+* FIXED: Failure of termination condition in an outer join which resulted in an infinite join
+
+* MODIFIED: Improved error message using using non-existent file to query command on CLI
+
+* MODIFIED: Updated to Sesame 2.7.10
+
+* MODIFIED: Updated to Protobuf 2.5.0
+
+* MODIFIED: Updated to Netty 4.0.17
+
+* MODIFIED: Updated to Lucene 4.7.0
+
+2.1.1 Changes
+----------------------------------------------------------------------------
+
+* ADDED: Several new SPARQL filter functions from the .NetRDF library
+
+* ADDED: Allow RDF strings to be passed as input to explain command
+
+* ADDED: CLI explain option to return multiple explanations
+
+* FIXED: Explanation generation with SPARQL rules
+
+* FIXED: Explanation merging to handle more cases 
+
+* FIXED: Obfuscation CLI commands to work with config files
+
+* FIXED: Obfuscation CLI commands to handle SPARQL rules properly
+
+* FIXED: Regex filter persisted over multiple queries
+
+* FIXED: Cast exception during describe query evaluation over named graphs
+
+* FIXED: Properties which are both symmetric and transitive are not handled correctly
+
+* FIXED: Incorrect mime-types sent to server for file references
+
+* FIXED: Some optionals, when mixed with distinct, still do not return distinct results
+
+* FIXED: Large numbers of unique BNodes in nq, trig, and trix formats cause RIO to use too much memory
+
+* FIXED: Buffers used during bulk loading can take up too much memory when large literals are used
+
+* MODIFIED: Fallback handling of access to sun.misc.Unsafe for JDK's which do not support it
+
+* MODIFIED: Improved filter pushing optimization
+
+* MODIFIED: Warning printed from 'role grant' command when multiple actions are provided
+
+2.1 Changes
+----------------------------------------------------------------------------
+
+* ADDED: Support for bzip2 compressed input files (with extension .bz2)
+
+* ADDED: Auto-repair mechanism for common types of index errors
+
+* ADDED: Generation of multiple proofs for inferences & inconsistencies
+
+* ADDED: Database repair, backup & restore utilities
+
+* ADDED: FROM/FROM NAMED 'default' can be used as an alias to query default graph
+
+* ADDED: 'dbms-admin:shutdown' permission to allow non-superusers which hold that permission, to shutdown the server
+
+* ADDED: Improved query scalability by flowing intermediate results off-heap or onto disk.  Note: flowing off-heap requires an Oracle JDK due to its use of sun.misc.Unsafe
+
+* ADDED: Significant improvement in performance of bulk loading and total scalability of a database
+
+* ADDED: Named Graph information in proofs
+
+* ADDED: Proofs for integrity constraint violations
+
+* FIXED: NaN displayed in waldo search results
+
+* FIXED: Web console hangs when using with SSL
+
+* FIXED: Log redirection at startup messes up the logger output
+
+* FIXED: Over-eager update plan caching resulting in different update queries executing the same update
+
+* FIXED: Search index is not needlessly rebuilt on stardog
+
+* FIXED: HTTP server on OpenJDK does not always close connections
+
+* FIXED: Web console not loading on Win7 when Stardog is run as a service
+
+* FIXED: Stardog Rules do not use the pre-defined database namespaces
+
+* FIXED: Encoding of special characters in web console
+
+* FIXED: Issue in query optimizer where a more optimal plan could accidentally get discarded
+
+* FIXED: Built-in values (such as owl:Thing) used inside filters are not correctly recognized
+
+* FIXED: Queries using reasoning and FILTER NOT EXISTS could return incomplete results
+
+* FIXED: Cannot shutdown server over HTTP if security is disabled
+
+* FIXED: Functions with zero args, such as BNODE(), can produce incorrect results
+
+* FIXED: now() returns the time the server started, not the actual current time
+
+* FIXED: Asking for the types of a class yields an exception
+
+* FIXED: Axioms using HasValue expressions can case type queries to produce incorrect results
+
+* FIXED: Value for subject in THEN clause is not returned
+
+* FIXED: BIND optimizer can incorrectly order the BIND expressions
+
+* FIXED: IF-THEN rules might fail to recognize term types
+
+* FIXED: Windows service does not always shut down cleanly
+
+* MODIFIED: Reduced memory footprint of queries while being executed
+
+* MODIFIED: Optimizing a database will also rebuild its search index
+
+* MODIFIED: Make database namespaces meta property creatable
+
+* MODIFIED: Database meta properties cannot be re-initialized to prevent malicious users from changing their behavior
+
+* MODIFIED: Updated to Netty 4.0.14
+
+* MODIFIED: Updated to Sesame 2.7.7
+
+2.0.3 Changes
+----------------------------------------------------------------------------
+
+* ADDED: manpages
+
+* ADDED: Support for punning when using reasoning & rdf:type
+
+* FIXED: Browse tab was missing classes in IE9
+
+* FIXED: Bug in Watchdog API JSON serialization
+
+* FIXED: Watchdog information in web console not visible on Windows
+
+* FIXED: Bug in rendering of columns in web console homepage in IE & FF
+
+* FIXED: Missing elements in web console in IE
+
+* FIXED: Correctly handle line breaks in proof tree serialization
+
+* FIXED: Missing final byte when formatting query results using 'Accept-Encoding: gzip,deflate'
+
+* FIXED: Parsing of queries which use the Stardog directType built-in
+
+* MODIFIED: Improved performance of web console in IE
+
+* MODIFIED: Improved group help, including full synopsis, in CLI
+
 2.0.2 Changes
 ----------------------------------------------------------------------------
 * ADDED: Support for the "Accept-Encoding: gzip" header over HTTP; enables sending of gzipped responses.

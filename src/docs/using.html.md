@@ -11,12 +11,11 @@ execute queries against RDF data which it has under direct
 management.<fn>This implies that Stardog will not retrieve data from the Web
 or from any other network via HTTP URLs in order to query that data. If
 you want to query data using Stardog, you must add that data to a new or
-existing Stardog database. A future version of Stardog will
-support [SDQ](http://weblog.clarkparsia.com/2011/03/07/sdq-information-integration-i%0An-the-real-world/), a distributed query system, that will lift this restriction.</fn> Stardog supports the [SPARQL](http://www.cambridgesemantics.com/2008/09/sparql-by-example) query language, a W3C standard.
+existing Stardog database.</fn> Stardog supports the [SPARQL](http://www.cambridgesemantics.com/2008/09/sparql-by-example) query language, a W3C standard.
 
 ## Querying
 
-Stardog currently supports all of the [SPARQL 1.1 Query
+Stardog currently supports the [SPARQL 1.1 Query
 language](http://www.w3.org/TR/sparql11-query/). <fn>Stardog does not support SPARQL 1.1 federation (the
 `SERVICE` keyword).</fn> Stardog also supports the [OWL 2 Direct Semantics
 entailment regime](http://www.w3.org/TR/2012/CR-sparql11-entailment-20121108/).
@@ -36,7 +35,7 @@ on its [`man` page](/man/query-execute.html).
 
 Stardog supports all of the functions in SPARQL, as well as some others from XPath and SWRL. Any of these functions can be used in queries or rules. Some functions appear in multiple namespaces, but all of the namespaces will work:
 
-Prefix     | Namespace                               
+Prefix     | Namespace
 ---------- | ----------------------------------------
 stardog    | [tag:stardog:api:functions:](#)
 fn         | [http://www.w3.org/2005/xpath-functions#](http://www.w3.org/2005/xpath-functions#)
@@ -46,8 +45,8 @@ afn        | [http://jena.hpl.hp.com/ARQ/function#](http://jena.hpl.hp.com/ARQ/f
 
 The function names and URIs supported by Stardog are included below. Some of these functions exist in SPARQL natively, which just means they can be used without an explicit namespace.
 
-Function name             | Recognized URIs          
-:-----------------------  | :----------------------- 
+Function name             | Recognized URIs
+:-----------------------  | :-----------------------
 abs                       | [fn:numeric-abs](http://www.w3.org/2005/xpath-functions#numeric-abs), [swrlb:abs](http://www.w3.org/2003/11/swrlb#abs)
 acos                      | [math:acos](http://www.w3.org/2005/xpath-functions/math#acos)
 add                       | [fn:numeric-add](http://www.w3.org/2005/xpath-functions#numeric-add)
@@ -109,6 +108,12 @@ unaryPlus                 | [fn:numeric-unary-plus](http://www.w3.org/2005/xpath
 year                      | [fn:year-from-dateTime](http://www.w3.org/2005/xpath-functions#year-from-dateTime)
 yearMonthDuration         | [swrlb:yearMonthDuration](http://www.w3.org/2003/11/swrlb#yearMonthDuration)
 
+### `DESCRIBE`
+
+SPARQL's `DESCRIBE` keyword is deliberately underspecified; vendors are free to do, for good or bad, whatever they want. In Stardog, a `DESCRIBE <theResource>` query retrieves the predicates and objects for all the triples for which `<theResource>` is the subject. There are, of course, about seventeen thousand other ways to implement `DESCRIBE`; we've implemented four or five of them and may expose them to users in a future release of Stardog _based on user feedback and requests_.
+
+Now you know and knowing is one-quarter of the fun.
+
 ## Updating
 
 There are many ways to update the data in a Stardog database; the most commonly used methods are the CLI and SPARQL Update queries, both of which we discuss below.
@@ -145,7 +150,7 @@ WITH <http://example/addresses>
 DELETE { ?person foaf:givenName 'Bill' }
 INSERT { ?person foaf:givenName 'William' }
 WHERE
-  { ?person foaf:givenName 'Bill' } 
+  { ?person foaf:givenName 'Bill' }
 ```
 
 ### Adding Data with the CLI
@@ -219,13 +224,114 @@ lax mode may lead to unexpected SPARQL query results. For example,
 malformed literals (`"2.5"^^xsd:int`) used in filter evaluation may lead
 to undesired results.
 
+<!--
+needs two octothorpes  Versioning <t>new22</t>
+
+Stardog supports database change management capability similar to popular version
+controls systems for source code. This capability lets users track changes between
+revisions of a Stardog database, add comments and other metadata to the revisions,
+extract diffs between those revisions, tag revisions
+with labels, and query over the revision history of the database using SPARQL.
+
+### Committing Changes
+
+stardog vcs commit —Commits a new version by adding and removing triples specified in files. Different from the 'data add/remove' commands, this command allows one to add and remove triples in one commit and associate a commit message. Removals are performed before additions.
+
+```bash
+$ stardog vcs commit --add add_file1.ttl add_file2.ttl --remove remove_file.ttl -m "This is an example commit" myDb
+```
+
+### Viewing Revisions
+
+Lists all the versions (commits) in a database
+
+    $ stardog version list myDb
+$ stardog version list --committer userName myDb
+
+* Lists all the versions committed bin a time range user
+
+--after <after>
+Limits the versions displayed to only those committed after this date. The date should be a valid xsd:date (YYYY-MM-DD) or xsd:dateTime (YYYY-MM-DDTHH:MM:SS) value.
+--before <before>
+Limits the versions displayed to only those committed before this date. The date should be a valid xsd:date (YYYY-MM-DD) or xsd:dateTime (YYYY-MM-DDTHH:MM:SS) value.
+--committer <committer>
+Limits the versions displayed to only those committed by this user.
+-l <limit>, --limit <limit>
+Limits the number of versions to show.
+
+### Viewing Diffs
+
+Prints the differences between the head version and its previous versions; i.e. the changes in last commit
+
+    $ stardog version diff myDb
+$ stardog version diff myDb de44369d-cc7b-4244-a3fb-3f6e271420b0
+
+* Prints the differences between two versions, i.e. all the changes committed after the first version until the second version (inclusive)
+Prints the difference between the given version and its previous version, i.e. the changes committed in a specific version
+
+    $ stardog version revert --single myDb de44369d-cc7b-4244-a3fb-3f6e271420b0
+
+### Using Tags
+
+--create
+Creates a new tags.
+--drop
+Drop a tag.
+--list
+Lists tags.
+-p <password>, --passwd <password>
+Password.
+-P, --ask-password
+Prompt for password.
+-t <version>, --tag <version>
+Tag name that will be created or removed.
+-u <username>, --username <username>
+User name.
+-v <version>, --version <version>
+The version that will be tagged.
+--verbose
+Print detailed information about each tag.
+--
+This option can be used to separate command-line options from the list of argument, (useful when arguments might be mistaken for command-line options
+<database>
+The name of the database or the full connection string of the database to connect to. If only the name is provided, the default server URL will be pre-pended to the name of the database in order to construct the connection string. Connection parameters such as ';reasoning=QL' can be included in the provided database name. Connection parameters specified like this can be overridden by specific options on the command. The default server URL will be read from the JVM argument 'stardog.default.cli.server'. If the JVM argument is not set, the default value 'snarl://localhost:5820' is used. If the server URL has no explicit port value, the default port value '5820' is used. To use a secure connection, you should specify the full connection string and postfix 's' to the protocol, e.g. snarls or https.
+
+EXAMPLES
+
+
+Lists the tags in a database
+
+    $ stardog version tag --list myDb
+
+
+
+### Reverting Revisions
+
+Reverts the last commit and restores the database to the previous version
+
+    $ stardog version revert myDb
+$ stardog version revert myDb de44369d-cc7b-4244-a3fb-3f6e271420b0
+
+* Reverts all the changes committed in a specific version and everything else until the second version
+Reverts the changes committed in one specific version.
+
+    $ stardog version revert --single myDb de44369d-cc7b-4244-a3fb-3f6e271420b0
+
+### Querying the Revision History
+
+Query the versions in a database
+
+    $ stardog versioning query myDb ''
+
+-->
+
 ## Exporting
 
 To export data from a Stardog database back to RDF,
 [export](/docs/man/data-export.html) is used by specifying—
 
 1.  the connection string of the database to export
-2.  the export format: `N-TRIPLES, RDFXML, TURTLE, TRIG`. default is
+2.  the export format: `N-TRIPLES, RDF/XML, TURTLE, TRIG`. default is
     'N-TRIPLES'— 'TRIG' must be used when exporting the entire database
     if the database contains triples inside named graphs.
 3.  optionally, the URI of the named graph to export if you wish to
@@ -240,7 +346,7 @@ $ stardog data export --format TURTLE myDatabase myDatabase_output.ttl
 $ stardog data export --graph-uri http://example.org/context myDatabase myDatabase_output.nt
 ```
 
-## Searching 
+## Searching
 Stardog includes an RDF-aware semantic search capability: it will index
 RDF literals and supports information retrieval-style queries over
 indexed data.
@@ -259,10 +365,10 @@ access the search index in a SPARQL query.
 For example,
 
 ```bash
-SELECT DISTINCT ?s ?score 
+SELECT DISTINCT ?s ?score
 WHERE {
 ?s ?p ?l.
-( ?l ?score ) <http://jena.hpl.hp.com/ARQ/property#textMatch> ( 'mac' 0.5 50 ). 
+( ?l ?score ) <http://jena.hpl.hp.com/ARQ/property#textMatch> ( 'mac' 0.5 50 ).
 }
 ```
 This query selects the top 50 literals, and their scores, which match
@@ -333,7 +439,7 @@ Data obfuscation works much the same way as the `export` command and supports th
 $ stardog data obfuscate myDatabase obfDatabase.ttl
 ```
 
-By default, all URIs, bnodes, and string literals in the database will be obfuscated using the SHA256 message digest algorithm. Non-string typed literals (numbers, dates, etc.) are left unchanged as well as URIs from built-in namespaces RDF, RDFS, and OWL. It is possible to customize obfuscation by providing a configuration file. 
+By default, all URIs, bnodes, and string literals in the database will be obfuscated using the SHA256 message digest algorithm. Non-string typed literals (numbers, dates, etc.) are left unchanged as well as URIs from built-in namespaces RDF, RDFS, and OWL. It is possible to customize obfuscation by providing a configuration file.
 
 ```bash
 $ stardog data obfuscate --config obfConfig.ttl myDatabase  obfDatabase.ttl

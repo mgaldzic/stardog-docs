@@ -33,6 +33,8 @@ The Stardog HTTP Protocol supports SPARQL Protocol 1.1 and additional resource r
 The Stardog HTTP API v3 is also available on Apiary:
 [http://docs.stardog.apiary.io/](http://docs.stardog.apiary.io/).
 
+The Stardog Linked Data API (aka "Annex") is also documented on Apiary: [http://docs.annex.apiary.io/](http://docs.annex.apiary.io/).
+
 ### Generating URLs
 
 If you are running the HTTP server at the following URL
@@ -163,6 +165,15 @@ The SPARQL endpoint for the database. The valid Accept types are listed
 above in the `HTTP Headers` section.
 
 To issue SPARQL queries with reasoning over HTTP, see the [Using Reasoning](http://docs.stardog.com/owl2/#reasoning) section of the [Reasoning](http://docs.stardog.com/owl2/) chapter.
+
+### SPARQL update
+
+```httpstring
+GET | POST /{db}/update
+```
+
+The SPARQL endpoint for updating the database with SPARQL Update. The valid Accept types are
+`application/sparql-update` `or application/x-www-form-urlencoded`.
 
 ### Query Plan
 
@@ -299,13 +310,13 @@ Returns whether or not the database is consistent w.r.t to the TBox.
 
 ```httpstardog
 GET /{db}/icv → RDF
-```     
+```
 
 Returns the integrity constraints for the specified database serialized in any supported RDF format.
 
 ### Adding Integrity Constraints
 
-```httpstardog 
+```httpstardog
 POST /{db}/icv/add
 ```
 
@@ -319,7 +330,7 @@ unable to be added.
 
 ```httpstardog
 POST /{db}/icv/remove
-```   
+```
 
 Accepts a set of valid Integrity constraints serialized in any RDF
 format supported by Stardog and removes them from the database in a
@@ -329,8 +340,8 @@ remove; `500` indicates an error.
 ### Clearing Integrity Constraints
 
 ```httpstardog
-POST /{db}/icv/clear 
-```      
+POST /{db}/icv/clear
+```
 
 Drops **all** integrity constraints for a database. `200` indicates all
 constraints were successfully dropped; `500` indicates an error.
